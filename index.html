@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEBULA STRIKE — Retro Space Shooter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+    <div id="crt-overlay"></div>
+
+    <div id="top-buttons">
+      <button id="pause-btn" title="Pause (P / Esc)">⏸</button>
+      <button id="crt-btn" title="Toggle CRT (C)">📺</button>
+      <button id="mute-btn" title="Toggle Sound (M)">🔊</button>
+    </div>
+
+    <div id="start-screen" class="overlay">
+      <h1 class="title">NEBULA<span>STRIKE</span></h1>
+      <p class="subtitle">— Retro Space Shooter —</p>
+      <div class="controls">
+        <p><b>Move</b> Arrow Keys / WASD / Mouse</p>
+        <p><b>Shoot</b> Space (hold to charge) / Left Click</p>
+        <p><b>Dash</b> Shift &nbsp; <b>Smart Bomb</b> B / Right Click</p>
+        <p><b>Pause</b> P / Esc &nbsp; <b>Mute</b> M &nbsp; <b>CRT</b> C</p>
+      </div>
+      <p class="hint">Survive waves. Defeat bosses. Chain combos.</p>
+      <p class="highscore" id="start-highscore">High Score: 0</p>
+      <button id="start-btn">PLAY</button>
+    </div>
+
+    <div id="pause-screen" class="overlay hidden">
+      <h1>PAUSED</h1>
+      <button id="resume-btn">RESUME</button>
+      <button id="quit-btn">QUIT</button>
+    </div>
+
+    <div id="game-over-screen" class="overlay hidden">
+      <h1 id="go-title">GAME OVER</h1>
+      <div id="stats" class="stats"></div>
+      <p class="highscore" id="go-highscore">High Score: 0</p>
+      <button id="restart-btn">PLAY AGAIN</button>
+    </div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
