@@ -2028,49 +2028,53 @@ function drawFloatingText() {
 
 function drawHUD() {
   // Top bar background
-  wctx.fillStyle = 'rgba(0, 10, 30, 0.55)';
-  wctx.fillRect(0, 0, CANVAS_W, 60);
-  wctx.strokeStyle = '#00ffff44';
-  wctx.lineWidth = 1;
-  wctx.beginPath(); wctx.moveTo(0, 60); wctx.lineTo(CANVAS_W, 60); wctx.stroke();
+  ctx.fillStyle = 'rgba(0, 10, 30, 0.55)';
+  ctx.fillRect(0, 0, CANVAS_W, 60);
+  ctx.strokeStyle = '#00ffff44';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, 60); ctx.lineTo(CANVAS_W, 60); ctx.stroke();
 
   // Score
-  wctx.font = 'bold 26px Orbitron, monospace';
-  wctx.textAlign = 'left';
-  wctx.shadowColor = '#00ffff';
-  wctx.shadowBlur = 10;
-  wctx.fillStyle = '#00ffff';
-  wctx.fillText('SCORE', 14, 22);
-  wctx.fillStyle = '#ffffff';
-  wctx.font = 'bold 28px Orbitron, monospace';
-  wctx.fillText(String(state.score).padStart(7, '0'), 14, 50);
+  ctx.font = 'bold 26px Orbitron, monospace';
+  ctx.textAlign = 'left';
+  ctx.shadowColor = '#00ffff';
+  ctx.shadowBlur = 4;
+  ctx.fillStyle = '#00ffff';
+  ctx.fillText('SCORE', 14, 22);
+  ctx.fillStyle = '#ffffff';
+  ctx.shadowBlur = 4;
+  ctx.font = 'bold 28px Orbitron, monospace';
+  ctx.fillText(String(state.score).padStart(7, '0'), 14, 50);
 
   // Wave & weapon (center)
-  wctx.textAlign = 'center';
-  wctx.font = 'bold 16px "Press Start 2P", monospace';
-  wctx.fillStyle = '#ffaa00';
-  wctx.shadowColor = '#ffaa00';
-  wctx.fillText(`WAVE ${state.wave || 1}`, CANVAS_W / 2, 24);
-  wctx.font = 'bold 14px Orbitron, monospace';
-  wctx.fillStyle = WEAPONS[state.weaponTier].color;
-  wctx.shadowColor = WEAPONS[state.weaponTier].color;
-  wctx.fillText(WEAPONS[state.weaponTier].name.toUpperCase(), CANVAS_W / 2, 48);
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 16px "Press Start 2P", monospace';
+  ctx.fillStyle = '#ffaa00';
+  ctx.shadowColor = '#ffaa00';
+  ctx.shadowBlur = 4;
+  ctx.fillText(`WAVE ${state.wave || 1}`, CANVAS_W / 2, 24);
+  ctx.font = 'bold 14px Orbitron, monospace';
+  ctx.fillStyle = WEAPONS[state.weaponTier].color;
+  ctx.shadowColor = WEAPONS[state.weaponTier].color;
+  ctx.shadowBlur = 4;
+  ctx.fillText(WEAPONS[state.weaponTier].name.toUpperCase(), CANVAS_W / 2, 48);
 
   // Lives (top right area, shifted to leave room for buttons)
-  wctx.textAlign = 'right';
-  wctx.shadowBlur = 8;
+  ctx.textAlign = 'right';
+  ctx.shadowBlur = 8;
   for (let i = 0; i < 3; i++) {
     const lit = i < state.lives;
-    wctx.fillStyle = lit ? '#ff4488' : '#330011';
-    wctx.shadowColor = lit ? '#ff4488' : 'transparent';
+    ctx.fillStyle = lit ? '#ff4488' : '#330011';
+    ctx.shadowColor = lit ? '#ff4488' : 'transparent';
     drawHeart(CANVAS_W - 200 + i * 30, 22, 10);
   }
 
   // High score
-  wctx.font = 'bold 12px Orbitron, monospace';
-  wctx.fillStyle = '#ffdd66';
-  wctx.shadowColor = '#ffaa00';
-  wctx.fillText(`HI: ${state.highscore}`, CANVAS_W - 130, 50);
+  ctx.font = 'bold 12px Orbitron, monospace';
+  ctx.fillStyle = '#ffdd66';
+  ctx.shadowColor = '#ffaa00';
+  ctx.shadowBlur = 4;
+  ctx.fillText(`HI: ${state.highscore}`, CANVAS_W - 130, 50);
 
   // Combo meter
   if (state.combo > 0) {
@@ -2079,114 +2083,114 @@ function drawHUD() {
     const meterH = 8;
     const mx = CANVAS_W / 2 - meterW / 2;
     const my = 70;
-    wctx.shadowBlur = 0;
-    wctx.fillStyle = 'rgba(0,0,0,0.5)';
-    wctx.fillRect(mx, my, meterW, meterH);
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(mx, my, meterW, meterH);
     const t = clamp(state.comboTimer / COMBO_WINDOW, 0, 1);
-    wctx.fillStyle = `hsl(${30 + state.comboTier * 40}, 100%, 55%)`;
-    wctx.fillRect(mx, my, meterW * t, meterH);
-    wctx.font = 'bold 18px "Press Start 2P", monospace';
-    wctx.fillStyle = `hsl(${30 + state.comboTier * 40}, 100%, 60%)`;
-    wctx.shadowColor = wctx.fillStyle;
-    wctx.shadowBlur = 12;
-    wctx.textAlign = 'center';
-    wctx.fillText(`×${tier} COMBO  (${state.combo})`, CANVAS_W / 2, my + 30);
+    ctx.fillStyle = `hsl(${30 + state.comboTier * 40}, 100%, 55%)`;
+    ctx.fillRect(mx, my, meterW * t, meterH);
+    ctx.font = 'bold 18px "Press Start 2P", monospace';
+    ctx.fillStyle = `hsl(${30 + state.comboTier * 40}, 100%, 60%)`;
+    ctx.shadowColor = ctx.fillStyle;
+    ctx.shadowBlur = 6;
+    ctx.textAlign = 'center';
+    ctx.fillText(`×${tier} COMBO  (${state.combo})`, CANVAS_W / 2, my + 30);
   }
 
   // Armor bar (left)
   if (state.player.armor > 0) {
     const aw = 160, ah = 8;
     const ax = 14, ay = 70;
-    wctx.shadowBlur = 0;
-    wctx.fillStyle = 'rgba(0,0,0,0.5)';
-    wctx.fillRect(ax, ay, aw, ah);
-    wctx.fillStyle = '#00ffff';
-    wctx.shadowColor = '#00ffff';
-    wctx.shadowBlur = 8;
-    wctx.fillRect(ax, ay, aw * (state.player.armor / state.player.maxArmor), ah);
-    wctx.font = 'bold 11px Orbitron, monospace';
-    wctx.fillStyle = '#88ddff';
-    wctx.textAlign = 'left';
-    wctx.fillText('SHIELD', ax, ay - 2);
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(ax, ay, aw, ah);
+    ctx.fillStyle = '#00ffff';
+    ctx.shadowColor = '#00ffff';
+    ctx.shadowBlur = 8;
+    ctx.fillRect(ax, ay, aw * (state.player.armor / state.player.maxArmor), ah);
+    ctx.font = 'bold 11px Orbitron, monospace';
+    ctx.fillStyle = '#88ddff';
+    ctx.textAlign = 'left';
+    ctx.fillText('SHIELD', ax, ay - 2);
   }
 
   // Bombs / Dashes (bottom-left)
-  wctx.shadowBlur = 8;
-  wctx.font = 'bold 14px Orbitron, monospace';
-  wctx.textAlign = 'left';
-  wctx.fillStyle = '#ff44aa';
-  wctx.shadowColor = '#ff44aa';
+  ctx.shadowBlur = 8;
+  ctx.font = 'bold 14px Orbitron, monospace';
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#ff44aa';
+  ctx.shadowColor = '#ff44aa';
   for (let i = 0; i < state.bombs; i++) {
-    wctx.beginPath(); wctx.arc(20 + i * 22, CANVAS_H - 22, 7, 0, TAU); wctx.fill();
+    ctx.beginPath(); ctx.arc(20 + i * 22, CANVAS_H - 22, 7, 0, TAU); ctx.fill();
   }
-  wctx.fillStyle = '#ff44aa';
-  wctx.fillText(`B × ${state.bombs}`, 20, CANVAS_H - 38);
+  ctx.fillStyle = '#ff44aa';
+  ctx.fillText(`B × ${state.bombs}`, 20, CANVAS_H - 38);
 
-  wctx.fillStyle = '#88ff44';
-  wctx.shadowColor = '#88ff44';
+  ctx.fillStyle = '#88ff44';
+  ctx.shadowColor = '#88ff44';
   for (let i = 0; i < state.dashes; i++) {
-    wctx.beginPath();
-    wctx.moveTo(140 + i * 22, CANVAS_H - 28);
-    wctx.lineTo(150 + i * 22, CANVAS_H - 22);
-    wctx.lineTo(140 + i * 22, CANVAS_H - 16);
-    wctx.closePath();
-    wctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(140 + i * 22, CANVAS_H - 28);
+    ctx.lineTo(150 + i * 22, CANVAS_H - 22);
+    ctx.lineTo(140 + i * 22, CANVAS_H - 16);
+    ctx.closePath();
+    ctx.fill();
   }
-  wctx.fillStyle = '#88ff44';
-  wctx.fillText(`SHIFT × ${state.dashes}`, 140, CANVAS_H - 38);
+  ctx.fillStyle = '#88ff44';
+  ctx.fillText(`SHIFT × ${state.dashes}`, 140, CANVAS_H - 38);
 
   // Boss bar (top, below HUD)
   if (state.boss) {
     const bx = 80, by = 70, bw = CANVAS_W - 160, bh = 14;
-    wctx.shadowBlur = 0;
-    wctx.fillStyle = 'rgba(0,0,0,0.7)';
-    wctx.fillRect(bx, by, bw, bh);
-    wctx.fillStyle = '#660033';
-    wctx.fillRect(bx, by, bw, bh);
-    wctx.fillStyle = '#ff2266';
-    wctx.shadowColor = '#ff2266';
-    wctx.shadowBlur = 12;
-    wctx.fillRect(bx, by, bw * (state.boss.hp / state.boss.maxHp), bh);
-    wctx.strokeStyle = '#ffffff';
-    wctx.lineWidth = 1;
-    wctx.strokeRect(bx, by, bw, bh);
-    wctx.font = 'bold 14px "Press Start 2P", monospace';
-    wctx.fillStyle = '#ffffff';
-    wctx.shadowColor = '#ff44aa';
-    wctx.textAlign = 'center';
-    wctx.fillText('— DREADNOUGHT —', CANVAS_W / 2, by - 4);
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.fillRect(bx, by, bw, bh);
+    ctx.fillStyle = '#660033';
+    ctx.fillRect(bx, by, bw, bh);
+    ctx.fillStyle = '#ff2266';
+    ctx.shadowColor = '#ff2266';
+    ctx.shadowBlur = 12;
+    ctx.fillRect(bx, by, bw * (state.boss.hp / state.boss.maxHp), bh);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(bx, by, bw, bh);
+    ctx.font = 'bold 14px "Press Start 2P", monospace';
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#ff44aa';
+    ctx.textAlign = 'center';
+    ctx.fillText('— DREADNOUGHT —', CANVAS_W / 2, by - 4);
   }
 
-  wctx.shadowBlur = 0;
+  ctx.shadowBlur = 0;
 }
 
 function drawHeart(x, y, size) {
-  wctx.beginPath();
-  wctx.moveTo(x, y + size * 0.3);
-  wctx.bezierCurveTo(x, y, x - size, y, x - size, y + size * 0.4);
-  wctx.bezierCurveTo(x - size, y + size * 0.85, x, y + size * 1.0, x, y + size * 1.3);
-  wctx.bezierCurveTo(x, y + size * 1.0, x + size, y + size * 0.85, x + size, y + size * 0.4);
-  wctx.bezierCurveTo(x + size, y, x, y, x, y + size * 0.3);
-  wctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(x, y + size * 0.3);
+  ctx.bezierCurveTo(x, y, x - size, y, x - size, y + size * 0.4);
+  ctx.bezierCurveTo(x - size, y + size * 0.85, x, y + size * 1.0, x, y + size * 1.3);
+  ctx.bezierCurveTo(x, y + size * 1.0, x + size, y + size * 0.85, x + size, y + size * 0.4);
+  ctx.bezierCurveTo(x + size, y, x, y, x, y + size * 0.3);
+  ctx.fill();
 }
 
 function drawWaveBanner() {
   if (state.waveBannerTime <= 0) return;
   const t = state.waveBannerTime / 2200;
   const alpha = t > 0.8 ? (1 - t) * 5 : (t < 0.2 ? t * 5 : 1);
-  wctx.save();
-  wctx.globalAlpha = clamp(alpha, 0, 1);
-  wctx.font = 'bold 64px "Press Start 2P", monospace';
-  wctx.textAlign = 'center';
+  ctx.save();
+  ctx.globalAlpha = clamp(alpha, 0, 1);
+  ctx.font = 'bold 64px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
   const isBoss = state.waveBannerText.includes('BOSS');
   const c = isBoss ? '#ff44aa' : '#00ffff';
-  wctx.shadowColor = c;
-  wctx.shadowBlur = 30;
-  wctx.fillStyle = '#000';
-  wctx.fillText(state.waveBannerText, CANVAS_W / 2 + 4, CANVAS_H / 2 + 4);
-  wctx.fillStyle = c;
-  wctx.fillText(state.waveBannerText, CANVAS_W / 2, CANVAS_H / 2);
-  wctx.restore();
+  ctx.shadowColor = c;
+  ctx.shadowBlur = 8;
+  ctx.fillStyle = '#000';
+  ctx.fillText(state.waveBannerText, CANVAS_W / 2 + 3, CANVAS_H / 2 + 3);
+  ctx.fillStyle = c;
+  ctx.fillText(state.waveBannerText, CANVAS_W / 2, CANVAS_H / 2);
+  ctx.restore();
 }
 
 function applyBloomToMain() {
@@ -2229,20 +2233,20 @@ function draw() {
   drawParticles();
   drawPlayer();
   drawFloatingText();
-  drawWaveBanner();
-
-  // Reset shake transform for HUD (HUD shouldn't shake)
-  wctx.setTransform(1, 0, 0, 1, 0, 0);
-  drawHUD();
 
   // White flash (full screen)
   if (state.flash > 0) {
+    wctx.setTransform(1, 0, 0, 1, 0, 0);
     wctx.fillStyle = `rgba(${state.flashColor === '#ff0000' ? '255,40,40' : '255,255,255'}, ${state.flash})`;
     wctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
   }
 
   // Composite to main with bloom
   applyBloomToMain();
+
+  // Draw HUD and wave banner on main ctx AFTER bloom so they are sharp
+  drawWaveBanner();
+  drawHUD();
 }
 
 // ═══ 18. Game flow ════════════════════════════════════════════════════════
