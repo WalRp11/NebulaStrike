@@ -173,14 +173,14 @@ Edit `js/constants.js` to adjust:
 - Enemy and boss behavior parameters
 
 ## Credits
-**Developer**: [Your Name]  
+**Developer**: WalRp11
 **Engine**: HTML5 Canvas, Web Audio API  
 **Inspiration**: Classic arcade shooters (Galaga, Asteroids, Gradius)  
 **Audio**: Procedurally synthesized  
 **Font**: Orbitron
 
 ## License
-[Add your license here]
+MIT License. Free to use and modify for any purpose. No attribution required but appreciated.
 
 ---
 
