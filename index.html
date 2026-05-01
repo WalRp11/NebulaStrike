@@ -28,10 +28,21 @@
         <p><b>Shoot</b> Space (hold to charge) / Left Click</p>
         <p><b>Dash</b> Shift &nbsp; <b>Smart Bomb</b> B / Right Click</p>
         <p><b>Pause</b> P / Esc &nbsp; <b>Mute</b> M &nbsp; <b>CRT</b> C</p>
+        <p><b>Weapon Toggle</b> 1..8 (slot based)</p>
       </div>
       <p class="hint">Survive waves. Defeat bosses. Chain combos.</p>
       <p class="highscore" id="start-highscore">High Score: 0</p>
       <button id="start-btn">PLAY</button>
+    </div>
+
+    <div id="difficulty-screen" class="overlay hidden">
+      <h1>SELECT DIFFICULTY</h1>
+      <div class="difficulty-buttons">
+        <button class="difficulty-btn" data-difficulty="easy">EASY</button>
+        <button class="difficulty-btn" data-difficulty="normal">NORMAL</button>
+        <button class="difficulty-btn" data-difficulty="hard">HARD</button>
+        <button class="difficulty-btn" data-difficulty="nightmare">NIGHTMARE</button>
+      </div>
     </div>
 
     <div id="pause-screen" class="overlay hidden">
@@ -47,6 +58,14 @@
       <button id="restart-btn">PLAY AGAIN</button>
     </div>
   </div>
+  <script src="js/constants.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/player_combat.js"></script>
+  <script src="js/enemies_bosses.js"></script>
+  <script src="js/pickups_effects.js"></script>
+  <script src="js/update_loop.js"></script>
+  <script src="js/rendering.js"></script>
   <script src="game.js"></script>
 </body>
 </html>
