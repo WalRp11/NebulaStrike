@@ -322,17 +322,18 @@ function startWave(n) {
   state.waveQueue = buildWave(n);
   state.waveSpawnTimer = 0;
   state.waveBannerTime = 2200;
-  state.waveBannerText = (n % 5 === 0) ? `BOSS WAVE ${n}` : `WAVE ${n}`;
-  state.bossPending = (n % 5 === 0);
+  const bossWave = n > 0 && n % BOSS_WAVE_INTERVAL === 0;
+  state.waveBannerText = bossWave ? `BOSS WAVE ${n}` : `WAVE ${n}`;
+  state.bossPending = bossWave;
   sfx.waveStart();
-  if (n % 5 === 0) {
+  if (bossWave) {
     setTimeout(() => { if (state.running) spawnBoss(n); }, 2000);
   }
 }
 
 function buildWave(n) {
   const q = [];
-  if (n % 5 === 0) return q; // boss waves: no regular spawns
+  if (n % BOSS_WAVE_INTERVAL === 0) return q; // boss waves: no regular spawns
 
   const baseCount = 8 + n * 2;
   let t = 600;
@@ -362,7 +363,7 @@ function buildWave(n) {
 }
 
 function spawnBoss(waveNum) {
-  const tier = Math.floor(waveNum / 5);
+  const tier = Math.floor(waveNum / BOSS_WAVE_INTERVAL);
   const bossType = ['dreadnought', 'corsair', 'leviathan'][tier % 3];
   let hp = bossType === 'dreadnought' ? (80 + tier * 70) :
            bossType === 'corsair' ? (100 + tier * 80) :
@@ -620,6 +621,7 @@ function damageBoss(b, x, y, dmg) {
 function defeatBoss() {
   const b = state.boss;
   if (!b) return;
+  const waveAtDefeat = state.wave;
   for (let i = 0; i < 6; i++) {
     setTimeout(() => {
       explode(b.x + rand(-80, 80), b.y + rand(-50, 50), choose(['#ff4444','#ffaa00','#ff44ff','#ffffff']), 30);
@@ -628,21 +630,25 @@ function defeatBoss() {
     }, i * 180);
   }
   setTimeout(() => {
-    state.score += 2000 + state.wave * 100;
+    state.score += 2000 + waveAtDefeat * 100;
     state.bombs = Math.min(MAX_BOMBS, state.bombs + 1);
     state.dashes = Math.min(MAX_DASH, state.dashes + 1);
-    // Boss drops multifire power-up if player doesn't have max yet
     if (state.multiWeaponCount < state.weaponLoadout.length) {
       spawnPickup('multifire', b.x, b.y - 40);
     }
     state.boss = null;
     state.bossActive = false;
     sfx.victory();
-    sfx.setBgmMode('play');
-    if (!sfx.isMuted()) { sfx.stopBgm(); sfx.startBgm('play'); }
     addFloatingText(CANVAS_W / 2, CANVAS_H / 2, 'BOSS DESTROYED', '#ff44ff', 2.6, -0.5);
     addFloatingText(CANVAS_W / 2, CANVAS_H / 2 + 36, '+ BOMB & DASH', '#ffaa00', 2.4, -0.5);
     state.waveActive = false;
+
+    if (waveAtDefeat >= FINAL_BOSS_WAVE) {
+      if (state.running) winGame();
+      return;
+    }
+    sfx.setBgmMode('play');
+    if (!sfx.isMuted()) { sfx.stopBgm(); sfx.startBgm('play'); }
     state.interWaveTimer = 1500;
   }, 1300);
 }

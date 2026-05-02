@@ -4,6 +4,11 @@ const CANVAS_H = 1200;
 const PLAYER_SPEED = 9;
 const HIGHSCORE_KEY = 'nebulastrike_highscore_v1';
 
+/** Every Nth wave is a boss; three bosses completes the campaign. */
+const BOSS_WAVE_INTERVAL = 5;
+const BOSSES_TO_WIN = 3;
+const FINAL_BOSS_WAVE = BOSS_WAVE_INTERVAL * BOSSES_TO_WIN;
+
 const WEAPONS = [
   { id: 'pulse',   name: 'Pulse',        color: '#00ffff', speed: 12, damage: 1,    type: 'bullet', cooldown: 170, pickupColor: '#00ffff', icon: 'P',  mass: 0.8 },
   { id: 'twin',    name: 'Twin Pulse',   color: '#ffff00', speed: 13, damage: 1,    type: 'double', cooldown: 190, pickupColor: '#ffee44', icon: 'II', mass: 0.8 },

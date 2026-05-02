@@ -1,0 +1,8 @@
+{
+  "name": "nebula-strike",
+  "private": true,
+  "description": "Retro canvas space shooter — static site, no build required",
+  "scripts": {
+    "dev": "npx --yes serve . -l 5173"
+  }
+}

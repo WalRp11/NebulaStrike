@@ -30,7 +30,7 @@
         <p><b>Pause</b> P / Esc &nbsp; <b>Mute</b> M &nbsp; <b>CRT</b> C</p>
         <p><b>Weapon Toggle</b> 1..8 (slot based)</p>
       </div>
-      <p class="hint">Survive waves. Defeat bosses. Chain combos.</p>
+      <p class="hint">Survive waves. Defeat three bosses to win. Chain combos.</p>
       <p class="highscore" id="start-highscore">High Score: 0</p>
       <button id="start-btn">PLAY</button>
     </div>
@@ -57,9 +57,19 @@
       <p class="highscore" id="go-highscore">High Score: 0</p>
       <button id="restart-btn">PLAY AGAIN</button>
     </div>
+
+    <div id="victory-screen" class="overlay hidden victory-overlay">
+      <h1 id="victory-title">VICTORY</h1>
+      <p class="victory-sub">All dreadnoughts destroyed — the sector is clear.</p>
+      <div id="victory-stats" class="stats"></div>
+      <p class="highscore" id="victory-highscore">High Score: 0</p>
+      <button id="victory-play-btn">PLAY AGAIN</button>
+      <button type="button" class="secondary-btn" id="victory-menu-btn">MAIN MENU</button>
+    </div>
   </div>
   <script src="js/constants.js"></script>
   <script src="js/utils.js"></script>
+  <script src="js/canvas_boot.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/player_combat.js"></script>
   <script src="js/enemies_bosses.js"></script>

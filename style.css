@@ -227,6 +227,42 @@ body {
     inset 0 -3px 0 #660033;
 }
 
+.victory-overlay h1 {
+  color: #ffdd44;
+  text-shadow:
+    0 0 14px #ffaa00,
+    0 0 36px #ff660088,
+    0 0 60px #00ffff44;
+}
+
+.victory-sub {
+  color: #aaccee;
+  font-size: 0.88rem;
+  max-width: 440px;
+  line-height: 1.5;
+  letter-spacing: 1px;
+}
+
+.overlay .secondary-btn {
+  margin-top: 6px;
+  padding: 12px 36px;
+  font-size: 0.72rem;
+  color: #ddeeff;
+  background: linear-gradient(180deg, #3a4a62 0%, #253042 100%);
+  border: 1px solid #00ffff44;
+  box-shadow:
+    0 0 12px #00102088,
+    inset 0 -2px 0 #152030;
+}
+
+.overlay .secondary-btn:hover {
+  background: linear-gradient(180deg, #4d5e78 0%, #354558 100%);
+  border-color: #00ffff99;
+  box-shadow:
+    0 0 20px #00ffff33,
+    inset 0 -2px 0 #152030;
+}
+
 .stats {
   display: grid;
   grid-template-columns: auto auto;
