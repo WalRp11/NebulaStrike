@@ -3,6 +3,33 @@
    Draw pipeline extracted from systems module.
 ============================================================================ */
 
+const meteorRadialCache = new Map();
+
+function meteorBodyGradient(wctx, size) {
+  const key = Math.round(size);
+  let g = meteorRadialCache.get(key);
+  if (!g) {
+    const half = key / 2;
+    g = wctx.createRadialGradient(-key / 4, -key / 4, 1, 0, 0, half);
+    g.addColorStop(0, '#aa9977');
+    g.addColorStop(1, '#443322');
+    meteorRadialCache.set(key, g);
+  }
+  return g;
+}
+
+function drawStarShape(s, fillStyle) {
+  wctx.fillStyle = fillStyle;
+  if (s.r < 1.08) {
+    const r = s.r;
+    wctx.fillRect(s.x - r, s.y - r, r * 2, r * 2);
+  } else {
+    wctx.beginPath();
+    wctx.arc(s.x, s.y, s.r, 0, TAU);
+    wctx.fill();
+  }
+}
+
 // ═══ 17. Draw ═════════════════════════════════════════════════════════════
 function drawBackground() {
   // Tile background canvas with parallax
@@ -11,37 +38,34 @@ function drawBackground() {
   wctx.drawImage(bgCanvas, 0, off);
 
   // Mid stars
-  wctx.fillStyle = '#ffffff';
   for (const s of state.starsFar) {
     const a = 0.3 + Math.sin(s.twinkle) * 0.2 + s.bright * 0.4;
     wctx.globalAlpha = a;
-    wctx.beginPath(); wctx.arc(s.x, s.y, s.r, 0, TAU); wctx.fill();
+    drawStarShape(s, '#ffffff');
   }
   for (const s of state.starsMid) {
     const a = 0.5 + Math.sin(s.twinkle * 1.5) * 0.25 + s.bright * 0.3;
     wctx.globalAlpha = a;
-    wctx.fillStyle = '#cce0ff';
-    wctx.beginPath(); wctx.arc(s.x, s.y, s.r, 0, TAU); wctx.fill();
+    drawStarShape(s, '#cce0ff');
   }
   for (const s of state.starsNear) {
     const a = 0.7 + Math.sin(s.twinkle * 2) * 0.3 + s.bright * 0.3;
     wctx.globalAlpha = Math.min(1, a);
-    wctx.fillStyle = '#ffffff';
-    wctx.beginPath(); wctx.arc(s.x, s.y, s.r, 0, TAU); wctx.fill();
+    drawStarShape(s, '#ffffff');
     // streak
     wctx.fillRect(s.x - 0.5, s.y - s.speed * 4, 1, s.speed * 4);
   }
   wctx.globalAlpha = 1;
 }
 
-function drawEnemy(e) {
+function drawEnemy(e, now) {
   wctx.save();
   wctx.translate(e.x, e.y);
   wctx.drawImage(e.sprite, -e.sprite.width / 2, -e.sprite.height / 2);
 
   // Shielded arc
   if (e.arch === 'shielded' && e.hp > 0) {
-    wctx.strokeStyle = `rgba(120, 200, 255, ${0.5 + Math.sin(performance.now() * 0.005) * 0.2})`;
+    wctx.strokeStyle = `rgba(120, 200, 255, ${0.5 + Math.sin(now * 0.005) * 0.2})`;
     wctx.lineWidth = 3;
     wctx.shadowColor = '#88ccff';
     wctx.shadowBlur = 12;
@@ -77,11 +101,7 @@ function drawMeteor(m) {
   wctx.rotate(m.rot);
   wctx.shadowColor = '#553311';
   wctx.shadowBlur = 8;
-  // Body gradient
-  const grad = wctx.createRadialGradient(-m.size / 4, -m.size / 4, 1, 0, 0, m.size / 2);
-  grad.addColorStop(0, '#aa9977');
-  grad.addColorStop(1, '#443322');
-  wctx.fillStyle = grad;
+  wctx.fillStyle = meteorBodyGradient(wctx, m.size);
   const sides = 9;
   wctx.beginPath();
   for (let i = 0; i < sides; i++) {
@@ -171,10 +191,12 @@ function drawEnemyBullet(eb) {
 }
 
 function drawParticles() {
+  const n = state.particles.length;
+  const shadowAmt = n > 300 ? 0 : n > 160 ? 5 : 8;
   for (const pa of state.particles) {
     wctx.globalAlpha = Math.max(0, pa.life);
     wctx.shadowColor = pa.color;
-    wctx.shadowBlur = 8;
+    wctx.shadowBlur = shadowAmt;
     if (pa.ring) {
       wctx.strokeStyle = pa.color;
       wctx.lineWidth = 3 * pa.life;
@@ -428,7 +450,8 @@ function drawWaveBanner() {
 function applyBloomToMain() {
   // Downscale world to bloom buffer with screen blend, then blur, then composite back
   bctx.clearRect(0, 0, bloomCanvas.width, bloomCanvas.height);
-  bctx.filter = 'brightness(1.4) saturate(1.4) blur(2px)';
+  // Lighter filter than before: fewer GPU passes, pairs with smaller bloom buffer (BLOOM_DIV).
+  bctx.filter = 'brightness(1.32) blur(1px)';
   bctx.drawImage(worldCanvas, 0, 0, bloomCanvas.width, bloomCanvas.height);
   bctx.filter = 'none';
 
@@ -437,14 +460,14 @@ function applyBloomToMain() {
   ctx.drawImage(worldCanvas, 0, 0);
   // Add bloom additively
   ctx.globalCompositeOperation = 'lighter';
-  ctx.globalAlpha = 0.55;
+  ctx.globalAlpha = 0.58;
   ctx.imageSmoothingEnabled = true;
   ctx.drawImage(bloomCanvas, 0, 0, CANVAS_W, CANVAS_H);
   ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = 'source-over';
 }
 
-function draw() {
+function draw(now = performance.now()) {
   wctx.setTransform(1, 0, 0, 1, 0, 0);
   wctx.fillStyle = '#000010';
   wctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
@@ -457,13 +480,13 @@ function draw() {
 
   drawAfterimages();
   for (const m of state.meteors) drawMeteor(m);
-  for (const e of state.enemies) drawEnemy(e);
-  for (const pk of state.pickups) drawPickup(pk);
-  if (state.boss) drawBoss();
+  for (const e of state.enemies) drawEnemy(e, now);
+  for (const pk of state.pickups) drawPickup(pk, now);
+  if (state.boss) drawBoss(now);
   for (const b of state.bullets) drawBullet(b);
   for (const eb of state.enemyBullets) drawEnemyBullet(eb);
   drawParticles();
-  drawPlayer();
+  drawPlayer(now);
   drawFloatingText();
 
   // White flash (full screen)

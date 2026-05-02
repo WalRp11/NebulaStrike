@@ -658,7 +658,7 @@ function defeatBoss() {
   }, 1300);
 }
 
-function drawBoss() {
+function drawBoss(now) {
   const b = state.boss;
   if (!b) return;
   wctx.save();
@@ -775,7 +775,7 @@ function drawBoss() {
       continue;
     }
     const cf = c.hp / c.maxHp;
-    const pulse = 0.7 + Math.sin(performance.now() * 0.01) * 0.3;
+    const pulse = 0.7 + Math.sin(now * 0.01) * 0.3;
     wctx.shadowColor = '#ffffff';
     wctx.shadowBlur = 18;
     wctx.fillStyle = `rgba(255, ${Math.floor(80 + cf * 175)}, ${Math.floor(40 + cf * 215)}, ${pulse})`;

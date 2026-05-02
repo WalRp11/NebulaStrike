@@ -10,7 +10,8 @@ worldCanvas.width = CANVAS_W;
 worldCanvas.height = CANVAS_H;
 const wctx = worldCanvas.getContext('2d');
 
-const BLOOM_DIV = 4;
+/** Smaller bloom buffer = cheaper blur pass; 8× keeps glow acceptable on 1000×1200. */
+const BLOOM_DIV = 8;
 const bloomCanvas = document.createElement('canvas');
 bloomCanvas.width = CANVAS_W / BLOOM_DIV;
 bloomCanvas.height = CANVAS_H / BLOOM_DIV;

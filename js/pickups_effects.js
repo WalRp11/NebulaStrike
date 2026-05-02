@@ -96,10 +96,10 @@ function spawnPickup(type, x, y, extra = {}) {
   state.pickups.push(pickup);
 }
 
-function drawPickup(p) {
+function drawPickup(p, now) {
   wctx.save();
   wctx.translate(p.x, p.y);
-  const t = performance.now() * 0.005;
+  const t = now * 0.005;
   wctx.rotate(Math.sin(t + p.bob) * 0.15);
   const pulse = 1 + Math.sin(t * 2 + p.bob) * 0.08;
   wctx.scale(pulse, pulse);
@@ -216,7 +216,10 @@ function applyPickup(p) {
 
 // ═══ 13. Particles, Trails, Floating Text, Shake ══════════════════════════
 function spawnParticle(x, y, vx, vy, r, color, decay = 0.025) {
-  if (state.particles.length >= PARTICLE_CAP) state.particles.shift();
+  if (state.particles.length >= PARTICLE_CAP) {
+    const target = Math.floor(PARTICLE_CAP * 0.85);
+    state.particles.splice(0, state.particles.length - target);
+  }
   state.particles.push({ x, y, vx, vy, r, color, life: 1, decay });
 }
 

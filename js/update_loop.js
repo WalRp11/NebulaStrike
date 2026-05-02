@@ -68,30 +68,39 @@ function update(dt, now) {
   if (p.armor > 0) {
     const shieldRatio = p.armor / p.maxArmor;
     const rad = 80 + shieldRatio * 40;
+    const rad2 = rad * rad;
     const force = 0.045 + shieldRatio * 0.045;
     for (const e of state.enemies) {
       const dx = e.x - p.x, dy = e.y - p.y;
-      const d = Math.hypot(dx, dy);
-      if (d < rad && d > 0.1) { e.x += dx / d * (rad - d) * force; e.y += dy / d * (rad - d) * force; }
+      const d2 = dx * dx + dy * dy;
+      if (d2 >= rad2 || d2 < 0.01) continue;
+      const d = Math.sqrt(d2);
+      e.x += (dx / d) * (rad - d) * force;
+      e.y += (dy / d) * (rad - d) * force;
     }
     for (const m of state.meteors) {
       const dx = m.x - p.x, dy = m.y - p.y;
-      const d = Math.hypot(dx, dy);
-      if (d < rad && d > 0.1) { m.x += dx / d * (rad - d) * force; m.y += dy / d * (rad - d) * force; }
+      const d2 = dx * dx + dy * dy;
+      if (d2 >= rad2 || d2 < 0.01) continue;
+      const d = Math.sqrt(d2);
+      m.x += (dx / d) * (rad - d) * force;
+      m.y += (dy / d) * (rad - d) * force;
     }
 
     // Deflect enemy ammo: costs energy based on momentum and kinetic energy.
     const deflectRadius = rad + 15;
+    const deflectR2 = deflectRadius * deflectRadius;
     for (const eb of state.enemyBullets) {
       const dx = eb.x - p.x;
       const dy = eb.y - p.y;
-      const d = Math.hypot(dx, dy);
-      if (d >= deflectRadius || d <= 0.1) continue;
+      const d2 = dx * dx + dy * dy;
+      if (d2 >= deflectR2 || d2 <= 0.01) continue;
+      const d = Math.sqrt(d2);
       if (eb.deflectLock && eb.deflectLock > now) continue;
 
       const nx = dx / d;
       const ny = dy / d;
-      const speed = Math.hypot(eb.vx, eb.vy) || 1;
+      const speed = Math.sqrt(eb.vx * eb.vx + eb.vy * eb.vy) || 1;
       
       // Physics-based deflection cost: momentum (linear) + kinetic energy (quadratic)
       const bulletMass = eb.mass || 0.5;
@@ -445,8 +454,10 @@ function update(dt, now) {
     pk.bob += dt * 0.005;
     // Magnet pull when close
     const dx = p.x - pk.x, dy = p.y - pk.y;
-    const d = Math.hypot(dx, dy);
-    if (d < 140) {
+    const d2 = dx * dx + dy * dy;
+    const magnetR2 = 140 * 140;
+    if (d2 > 0.01 && d2 < magnetR2) {
+      const d = Math.sqrt(d2);
       pk.x += (dx / d) * 4 * dts;
       pk.y += (dy / d) * 4 * dts;
     }

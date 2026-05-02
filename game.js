@@ -273,7 +273,7 @@ function loop(timestamp) {
   const dt = Math.min(50, timestamp - lastTime);
   lastTime = timestamp;
   update(dt, timestamp);
-  draw();
+  draw(timestamp);
   animFrame = requestAnimationFrame(loop);
 }
 

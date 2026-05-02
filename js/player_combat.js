@@ -4,7 +4,7 @@
 ============================================================================ */
 
 // ═══ 8. Player ════════════════════════════════════════════════════════════
-function drawPlayer() {
+function drawPlayer(now) {
   const p = state.player;
   if (p.invincible > 0 && Math.floor(p.invincible / 80) % 2 === 0 && state.dashIframes <= 0) return;
 
@@ -125,7 +125,7 @@ function drawPlayer() {
 
   // Charging indicator
   if (state.charging) {
-    const t = Math.min(1, (performance.now() - state.chargeStart) / CHARGE_FULL_MS);
+    const t = Math.min(1, (now - state.chargeStart) / CHARGE_FULL_MS);
     wctx.shadowColor = `hsl(${280 + t * 60}, 100%, 60%)`;
     wctx.shadowBlur = 25 * t;
     wctx.fillStyle = `rgba(255, ${100 + t * 155}, 255, ${0.3 + t * 0.5})`;
@@ -137,7 +137,7 @@ function drawPlayer() {
   // Shield
   if (p.armor > 0) {
     const a = p.armor / p.maxArmor;
-    const pulse = 1 + Math.sin(performance.now() * 0.005) * 0.04;
+    const pulse = 1 + Math.sin(now * 0.005) * 0.04;
     const inner = (38 + a * 16) * pulse;
     const outer = (56 + a * 50) * pulse;
     wctx.strokeStyle = `rgba(0, 255, 255, ${0.35 + a * 0.45})`;
