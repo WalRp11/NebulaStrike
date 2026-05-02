@@ -30,13 +30,19 @@
         <p><b>Pause</b> P / Esc &nbsp; <b>Mute</b> M &nbsp; <b>CRT</b> C</p>
         <p><b>Weapon Toggle</b> 1..8 (slot based)</p>
       </div>
-      <p class="hint">Survive waves. Defeat three bosses to win. Chain combos.</p>
+      <p class="hint">Campaign: three bosses to win. Endless: keep going — music &amp; waves scale up.</p>
       <p class="highscore" id="start-highscore">High Score: 0</p>
       <button id="start-btn">PLAY</button>
     </div>
 
     <div id="difficulty-screen" class="overlay hidden">
       <h1>SELECT DIFFICULTY</h1>
+      <p class="mode-label">MODE</p>
+      <div class="mode-row">
+        <button type="button" class="mode-btn selected" data-mode="campaign" id="mode-campaign">CAMPAIGN</button>
+        <button type="button" class="mode-btn" data-mode="endless" id="mode-endless">ENDLESS</button>
+      </div>
+      <p class="mode-hint" id="mode-hint">Three bosses, then victory.</p>
       <div class="difficulty-buttons">
         <button class="difficulty-btn" data-difficulty="easy">EASY</button>
         <button class="difficulty-btn" data-difficulty="normal">NORMAL</button>

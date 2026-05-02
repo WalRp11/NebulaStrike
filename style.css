@@ -276,6 +276,66 @@ body {
 .stats .label { color: #00ffff; }
 .stats .value { color: #ffffff; text-shadow: 0 0 8px #00ffff; font-weight: 700; }
 
+.mode-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 4px;
+  color: #66aaff;
+  margin-top: 4px;
+}
+
+.mode-hint {
+  font-size: 0.72rem;
+  color: #88bbdd;
+  letter-spacing: 1px;
+  max-width: 420px;
+  line-height: 1.4;
+  margin: 4px 0 8px;
+}
+
+.mode-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mode-btn {
+  padding: 10px 22px;
+  font-size: 0.65rem;
+  font-family: 'Press Start 2P', monospace;
+  letter-spacing: 2px;
+  cursor: pointer;
+  border-radius: 2px;
+  border: 2px solid #00ffff33;
+  background: rgba(0, 12, 28, 0.55);
+  color: #6a8aa0;
+  opacity: 0.72;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+
+.mode-btn:hover {
+  opacity: 0.95;
+  border-color: #00ffff88;
+  color: #cceeff;
+  background: rgba(0, 28, 48, 0.75);
+}
+
+.mode-btn.selected {
+  opacity: 1;
+  border-color: #00ffff;
+  color: #001020;
+  background: linear-gradient(180deg, #66ffff 0%, #00a8d4 100%);
+  box-shadow:
+    0 0 22px #00ffff88,
+    inset 0 -2px 0 #006688;
+}
+
+.mode-btn.selected:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #66ffff 100%);
+  color: #001020;
+}
+
 .difficulty-buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;

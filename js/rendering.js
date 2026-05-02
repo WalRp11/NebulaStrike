@@ -248,7 +248,10 @@ function drawHUD() {
   ctx.fillStyle = '#ffaa00';
   ctx.shadowColor = '#ffaa00';
   ctx.shadowBlur = 4;
-  ctx.fillText(`WAVE ${state.wave || 1}`, CANVAS_W / 2, 24);
+  const waveLabel = state.endlessMode
+    ? `WAVE ${state.wave || 1}  ·  ∞`
+    : `WAVE ${state.wave || 1}`;
+  ctx.fillText(waveLabel, CANVAS_W / 2, 24);
   const equipped = state.weaponLoadout.map(id => weaponById(id)).filter(Boolean);
   const activeEquipped = state.weaponLoadout
     .filter(id => state.weaponEnabled[id])

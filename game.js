@@ -119,6 +119,7 @@ function initState() {
     shotsHit: 0,
     enemiesKilled: 0,
     campaignWon: false,
+    endlessMode: false,
 
     player: {
       x: CANVAS_W / 2, y: CANVAS_H - 100,
@@ -159,14 +160,17 @@ function showDifficultyScreen() {
   document.getElementById('game-over-screen').classList.add('hidden');
   document.getElementById('victory-screen').classList.add('hidden');
   document.getElementById('difficulty-screen').classList.remove('hidden');
+  const sel = document.querySelector('.mode-btn.selected');
+  if (sel && sel.dataset.mode) pendingGameMode = sel.dataset.mode;
 }
 
-function startGame() {
+function startGame(endlessFlag = false) {
+  const diff = state.difficulty;
+  const mult = state.difficultyMultipliers;
   state = initState();
-  // Preserve difficulty and multipliers set by difficulty screen
-  if (state.difficulty && DIFFICULTY_MODES[state.difficulty]) {
-    state.difficultyMultipliers = DIFFICULTY_MODES[state.difficulty];
-  }
+  state.difficulty = diff;
+  state.difficultyMultipliers = mult;
+  state.endlessMode = !!endlessFlag;
   state.running = true;
   state.interWaveTimer = 1200;
   document.getElementById('start-screen').classList.add('hidden');
@@ -214,6 +218,7 @@ function winGame() {
   state.running = false;
   state.campaignWon = true;
   sfx.stopBgm();
+  sfx.campaignVictory();
   cancelAnimationFrame(animFrame);
 
   const isNew = state.score > state.highscore;
@@ -247,6 +252,7 @@ function quitToMenu() {
   state.running = false;
   state.paused = false;
   state.campaignWon = false;
+  state.endlessMode = false;
   cancelAnimationFrame(animFrame);
   sfx.stopBgm();
   document.getElementById('pause-screen').classList.add('hidden');
@@ -272,7 +278,22 @@ function loop(timestamp) {
 }
 
 // ── Init
+let pendingGameMode = 'campaign';
 state = initState();
+
+const modeHintEl = document.getElementById('mode-hint');
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    pendingGameMode = btn.dataset.mode || 'campaign';
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('selected', b === btn));
+    if (modeHintEl) {
+      modeHintEl.textContent =
+        pendingGameMode === 'endless'
+          ? 'No ending — bosses every 5 waves, difficulty keeps climbing.'
+          : 'Three bosses, then victory.';
+    }
+  });
+});
 
 document.getElementById('start-highscore').textContent = `High Score: ${state.highscore}`;
 document.getElementById('start-btn').addEventListener('click', showDifficultyScreen);
@@ -300,7 +321,7 @@ document.querySelectorAll('.difficulty-btn').forEach(btn => {
     const difficulty = btn.dataset.difficulty;
     state.difficulty = difficulty;
     state.difficultyMultipliers = DIFFICULTY_MODES[difficulty];
-    startGame();
+    startGame(pendingGameMode === 'endless');
   });
 });
 

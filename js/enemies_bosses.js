@@ -638,14 +638,19 @@ function defeatBoss() {
     }
     state.boss = null;
     state.bossActive = false;
-    sfx.victory();
     addFloatingText(CANVAS_W / 2, CANVAS_H / 2, 'BOSS DESTROYED', '#ff44ff', 2.6, -0.5);
     addFloatingText(CANVAS_W / 2, CANVAS_H / 2 + 36, '+ BOMB & DASH', '#ffaa00', 2.4, -0.5);
     state.waveActive = false;
 
-    if (waveAtDefeat >= FINAL_BOSS_WAVE) {
+    if (waveAtDefeat >= FINAL_BOSS_WAVE && !state.endlessMode) {
       if (state.running) winGame();
       return;
+    }
+    if (state.endlessMode && waveAtDefeat >= FINAL_BOSS_WAVE) {
+      sfx.endlessDepth();
+      addFloatingText(CANVAS_W / 2, CANVAS_H / 2 + 72, 'SECTOR CLEAR — PUSHING DEEPER', '#88ffcc', 2.2, -0.45);
+    } else {
+      sfx.bossClear();
     }
     sfx.setBgmMode('play');
     if (!sfx.isMuted()) { sfx.stopBgm(); sfx.startBgm('play'); }

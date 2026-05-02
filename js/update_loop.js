@@ -13,6 +13,7 @@ function checkWeaponUpgrade() {
 }
 
 function update(dt, now) {
+  if (typeof sfx.syncAmbientState === 'function') sfx.syncAmbientState(state);
   const dts = dt / 16.6667;  // step factor (1 at 60fps)
   const p = state.player;
   const k = input.keys;
